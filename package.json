@@ -3,6 +3,13 @@
   "version": "0.0.1",
   "main": "index.js",
   "license": "MIT",
+  "mikro-orm": {
+    "useTsNode": true,
+    "configPaths": [
+      "./mikro-orm.config.ts",
+      "./dist/mikro-orm.config.js"
+    ]
+  },
   "scripts": {
     "start": "yarn clean && tsc && concurrently \"tsc -w\" \"nodemon ./dist/index.js\"",
     "build": "yarn clean && tsc",

@@ -13,6 +13,7 @@ module.exports = {
     semi: ['error', 'always'],
     '@typescript-eslint/strict-boolean-expressions': 'off',
     '@typescript-eslint/no-unused-vars': 'error',
+    'comma-dangle': 'off',
   },
   plugins: ['jest'],
   env: {
