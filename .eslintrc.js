@@ -12,8 +12,16 @@ module.exports = {
   rules: {
     semi: ['error', 'always'],
     '@typescript-eslint/strict-boolean-expressions': 'off',
-    '@typescript-eslint/no-unused-vars': 'error',
+    '@typescript-eslint/no-unused-vars': [
+      'error',
+      {
+        argsIgnorePattern: '^_',
+      },
+    ],
     'comma-dangle': 'off',
+    'space-before-function-paren': 'off',
+    '@typescript-eslint/ban-ts-ignore': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
   },
   plugins: ['jest'],
   env: {
