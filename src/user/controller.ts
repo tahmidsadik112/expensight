@@ -7,8 +7,10 @@ import type {
 } from 'fastify';
 
 import type { Server, IncomingMessage, ServerResponse } from 'http';
-import { Users as User } from './../entities/Users';
-import { orm } from './../db';
+
+import { userSchema } from './validation-schemas';
+import { createUser } from './service';
+import { Users as User } from '../entities';
 
 type Request = IncomingMessage;
 type Response = ServerResponse;
@@ -19,23 +21,6 @@ type RoutePlugin = Plugin<
   Response,
   RegisterOptions<Server, Request, Response>
 >;
-
-async function createUserHandler(req: FastifyRequest): Promise<string> {
-  console.log(req.body);
-
-  const user = new User({
-    fullName: 'Tahmid Sadik',
-    email: 'tahmid@tahmidsadik.com',
-    phone: '01770169762',
-    password: 'lskdjflsdjflskkjflskdjfnviqitp23993809cv',
-  });
-
-  orm.em.persistAndFlush(user);
-
-  console.log(user);
-
-  return 'request received';
-}
 
 export const router: RoutePlugin = function (
   fastify: FastifyInstance,
@@ -49,7 +34,26 @@ export const router: RoutePlugin = function (
     return 'hello world';
   });
 
-  fastify.post('/', createUserHandler);
+  fastify.post(
+    '/',
+    {
+      schema: {
+        body: userSchema,
+      },
+    },
+    async function (req: FastifyRequest): Promise<User> {
+      const { name, email, password, phone } = req.body;
+
+      const user = await createUser({
+        fullName: name,
+        email,
+        password,
+        phone,
+      });
+
+      return user;
+    }
+  );
 
   next();
 };

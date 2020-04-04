@@ -8,8 +8,7 @@ import {
 } from 'mikro-orm';
 import { ConnectionString } from 'connection-string';
 import { Users, Transactions, UserAccessTokens } from '../entities/index';
-import { FastifyInstance, RegisterOptions, Logger } from 'fastify';
-import { Server, IncomingMessage, ServerResponse } from 'http';
+import { log } from '../server';
 
 const { host, port, password, database, username: user } = db;
 
@@ -29,8 +28,8 @@ cs.setDefaults({
 
 export let orm: MikroORM<IDatabaseDriver<Connection>>;
 
-export async function initializeORM(logger?: Logger): Promise<void> {
-  logger ? logger.info('Initializing orm') : console.log('initializing ORM');
+export async function initializeORM(): Promise<void> {
+  log.info('Initializing orm');
   orm = await MikroORM.init({
     entities: [Users, UserAccessTokens, Transactions],
     entitiesDirs: ['./dist/src/entities'],
@@ -40,24 +39,12 @@ export async function initializeORM(logger?: Logger): Promise<void> {
     discovery: { warnWhenNoEntities: false },
     clientUrl: cs.toString(),
     debug: process.env.NODE_ENV === 'development',
-    logger,
+    logger: log,
   } as Options);
 }
 
-export const mikroORMRefreshContextPlugin = async function (
-  { log }: FastifyInstance,
-  _options: RegisterOptions<Server, IncomingMessage, ServerResponse>,
-  // @ts-ignore
-  next: (...args: any[]) => any
-): Promise<void> {
-  if (!orm) {
-    log.warn('orm object is null, reinitializing...');
-    await initializeORM(log);
-  }
-
-  if (orm) {
-    log.info('refreshing mikro-orm context');
-    RequestContext.create(orm.em, next);
-  }
-  throw Error('Cannot initalize context as orm is null');
+// @ts-ignore
+export const refreshCtx = function (_req, _res, next): void {
+  log.info('refreshing entity manager context');
+  RequestContext.create(orm.em, next);
 };

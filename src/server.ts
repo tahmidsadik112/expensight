@@ -3,17 +3,18 @@ import { AddressInfo } from 'net';
 import { port } from '../config';
 import { router as userRouter } from './user/controller';
 import fastifyFavicon from 'fastify-favicon';
-import { initializeORM, mikroORMRefreshContextPlugin } from './db';
+import { initializeORM, refreshCtx } from './db';
 
 const app = fastify({ logger: { level: 'info', prettyPrint: true } });
-const { log } = app;
+export const { log } = app;
 
 app.register(fastifyFavicon);
 
-app.register(mikroORMRefreshContextPlugin);
 app.register(userRouter, {
   prefix: '/user',
 });
+
+app.addHook('preHandler', refreshCtx);
 
 app.get('/', async () => {
   return 'hello world';
@@ -21,7 +22,7 @@ app.get('/', async () => {
 
 const start = async (): Promise<void> => {
   try {
-    await initializeORM(log);
+    await initializeORM();
     await app.listen(port);
     log.info(
       `server listening on ${(app.server.address() as AddressInfo).port}`
