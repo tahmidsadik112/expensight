@@ -37,6 +37,7 @@
     "@synor/database-postgresql": "^0.4.1",
     "@synor/source-file": "^0.6.0",
     "@types/joi": "^14.3.4",
+    "bcrypt": "^4.0.1",
     "config": "^3.3.1",
     "fastify": "^2.13.0",
     "fastify-favicon": "^2.0.0",
@@ -44,14 +45,15 @@
     "joi-to-json-schema": "^5.1.0",
     "mikro-orm": "3.4.1",
     "pg": "^8.0.0",
-    "pino": "^6.1.1",
-    "pino-pretty": "^4.0.0"
+    "pino-pretty": "^4.0.0",
+    "uuid": "^7.0.3"
   },
   "devDependencies": {
+    "@types/bcrypt": "^3.0.0",
     "@types/config": "^0.0.36",
     "@types/fastify-favicon": "^0.3.0",
     "@types/node": "^13.11.0",
-    "@types/pino": "^5.17.0",
+    "@types/uuid": "^7.0.2",
     "@typescript-eslint/eslint-plugin": "^2.26.0",
     "@typescript-eslint/parser": "^2.26.0",
     "concurrently": "^5.1.0",
