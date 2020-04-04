@@ -31,7 +31,7 @@ const configs = {
   type: 'postgresql',
   discovery: { warnWhenNoEntities: false },
   clientUrl: databaseUri,
-  debug: true
+  debug: true,
 } as Options;
 
 export default configs;
