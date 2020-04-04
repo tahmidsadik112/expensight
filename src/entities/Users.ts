@@ -1,4 +1,12 @@
-import { Entity, PrimaryKey, Property, Unique } from 'mikro-orm';
+import {
+  Entity,
+  PrimaryKey,
+  Property,
+  Unique,
+  OneToMany,
+  Collection,
+} from 'mikro-orm';
+import { UserAccessTokens } from './UserAccessTokens';
 
 @Entity()
 export class Users {
@@ -32,6 +40,9 @@ export class Users {
     default: 'CURRENT_TIMESTAMP',
   })
   modified!: Date;
+
+  @OneToMany(() => UserAccessTokens, uat => uat.user)
+  accessTokens = new Collection<UserAccessTokens>(this);
 
   constructor({
     fullName,
