@@ -6,18 +6,18 @@ export class Users {
   id!: number;
 
   @Property({ columnType: 'text' })
-  fullName!: string;
+  fullName: string;
 
   @Unique({ name: 'users_phone_key' })
   @Property({ columnType: 'text' })
-  phone!: string;
+  phone: string;
 
   @Unique({ name: 'users_email_key' })
   @Property({ columnType: 'text' })
-  email!: string;
+  email: string;
 
   @Property({ columnType: 'text' })
-  password!: string;
+  password: string;
 
   @Property({
     columnType: 'timestamp',
@@ -32,4 +32,21 @@ export class Users {
     default: 'CURRENT_TIMESTAMP',
   })
   modified!: Date;
+
+  constructor({
+    fullName,
+    phone,
+    email,
+    password,
+  }: {
+    fullName: string;
+    phone: string;
+    email: string;
+    password: string;
+  }) {
+    this.fullName = fullName;
+    this.phone = phone;
+    this.email = email;
+    this.password = password;
+  }
 }
