@@ -1,14 +1,16 @@
 import fastify from 'fastify';
 import { AddressInfo } from 'net';
+import fastifyFavicon from 'fastify-favicon';
+import fastifySensible from 'fastify-sensible';
 import { port } from '../config';
 import { router as userRouter } from './user/controller';
-import fastifyFavicon from 'fastify-favicon';
-import { initializeORM, refreshCtx } from './db';
+import { initializeORM, refreshCtx } from './db/index';
 
 const app = fastify({ logger: { level: 'info', prettyPrint: true } });
 export const { log } = app;
 
 app.register(fastifyFavicon);
+app.register(fastifySensible);
 
 app.register(userRouter, {
   prefix: '/user',
@@ -16,9 +18,7 @@ app.register(userRouter, {
 
 app.addHook('preHandler', refreshCtx);
 
-app.get('/', async () => {
-  return 'hello world';
-});
+app.get('/', async () => 'hello world');
 
 const start = async (): Promise<void> => {
   try {

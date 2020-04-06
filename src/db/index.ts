@@ -7,7 +7,7 @@ import {
   RequestContext,
 } from 'mikro-orm';
 import { ConnectionString } from 'connection-string';
-import { Users, Transactions, UserAccessTokens } from '../entities/index';
+import { User, Transaction, UserAccessTokens } from '../entities/index';
 import { log } from '../server';
 
 const { host, port, password, database, username: user } = db;
@@ -31,7 +31,7 @@ export let orm: MikroORM<IDatabaseDriver<Connection>>;
 export async function initializeORM(): Promise<void> {
   log.info('Initializing orm');
   orm = await MikroORM.init({
-    entities: [Users, UserAccessTokens, Transactions],
+    entities: [User, UserAccessTokens, Transaction],
     entitiesDirs: ['./dist/src/entities'],
     entitiesDirsTs: ['./src/entities'],
     dbName: database,
