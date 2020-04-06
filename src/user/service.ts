@@ -1,9 +1,17 @@
 import { orm } from '../db';
-import { Users as User } from '../entities';
+import { User } from '../entities';
+import { hashPassword } from '../common/auth';
 
-export async function findUserById(userID: number): Promise<User> {
-  const user = await orm.em.findOneOrFail(User, {
+export async function findUserById(userID: number): Promise<User | null> {
+  const user = await orm.em.findOne(User, {
     id: userID,
+  });
+  return user;
+}
+
+export async function findUserByEmail(email: string): Promise<User | null> {
+  const user = await orm.em.findOne(User, {
+    email,
   });
   return user;
 }
@@ -19,10 +27,12 @@ export async function createUser({
   password: string;
   phone: string;
 }): Promise<User> {
+  const hashedPassword = await hashPassword(password);
+
   const user = new User({
     fullName,
     email,
-    password,
+    password: hashedPassword,
     phone,
   });
 

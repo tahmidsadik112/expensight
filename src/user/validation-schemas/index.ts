@@ -11,4 +11,12 @@ const joiUserSchma = Joi.object()
   })
   .required();
 
+const joiLoginSchema = Joi.object()
+  .keys({
+    email: Joi.string().email().required(),
+    password: Joi.string().required(),
+  })
+  .required();
+
 export const userSchema = convert(joiUserSchma);
+export const loginSchema = convert(joiLoginSchema);

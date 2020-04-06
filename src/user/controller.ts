@@ -8,9 +8,12 @@ import type {
 
 import type { Server, IncomingMessage, ServerResponse } from 'http';
 
-import { userSchema } from './validation-schemas';
-import { createUser } from './service';
-import { Users as User } from '../entities';
+import { userSchema, loginSchema } from './validation-schemas';
+import { createUser, findUserByEmail } from './service';
+import {
+  generateAndAssociateAccessTokenWithUser,
+  matchPassword,
+} from '../common/auth';
 
 type Request = IncomingMessage;
 type Response = ServerResponse;
@@ -41,7 +44,14 @@ export const router: RoutePlugin = function (
         body: userSchema,
       },
     },
-    async function (req: FastifyRequest): Promise<User> {
+    async function (
+      req: FastifyRequest
+    ): Promise<{
+      fullName: string;
+      phone: string;
+      email: string;
+      accessToken: string;
+    }> {
       const { name, email, password, phone } = req.body;
 
       const user = await createUser({
@@ -50,8 +60,45 @@ export const router: RoutePlugin = function (
         password,
         phone,
       });
+      const uat = await generateAndAssociateAccessTokenWithUser(user);
+      return {
+        fullName: name,
+        phone,
+        email,
+        accessToken: uat.token,
+      };
+    }
+  );
 
-      return user;
+  fastify.post(
+    '/login',
+    {
+      schema: {
+        body: loginSchema,
+      },
+    },
+    async function loginHandler(req: FastifyRequest) {
+      const { email, password } = req.body;
+      const user = await findUserByEmail(email);
+      if (!user) {
+        throw fastify.httpErrors.unauthorized(
+          'Incorrect email/password combination'
+        );
+      }
+      if (!(await matchPassword(user.id, password))) {
+        fastify.log.debug('password did not match');
+        throw fastify.httpErrors.unauthorized(
+          'Incorrect email/password combination'
+        );
+      }
+
+      const uat = await generateAndAssociateAccessTokenWithUser(user);
+      return {
+        fullName: user.fullName,
+        phone: user.phone,
+        email,
+        accessToken: uat.token,
+      };
     }
   );
 
