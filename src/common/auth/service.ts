@@ -2,10 +2,11 @@ import { v4 as uuidV4 } from 'uuid';
 import { orm } from '../../db';
 import { hash } from 'bcrypt';
 import { log } from '../../server';
-import { Users as User } from '../../entities';
+import { findUserById } from '../../user/service';
+import { UserAccessTokens as UserAccessToken } from '../../entities';
 
 /*
- * * in a separate method so that we can control the generation logic separately
+ * * in a separate function so that we can control the generation logic separately
  */
 async function genToken(): Promise<string> {
   const token = await hash(uuidV4(), 12);
@@ -16,10 +17,13 @@ async function genToken(): Promise<string> {
 export async function generateAndAssociateAccessTokenWithUser(
   userID: number
 ): Promise<void> {
-  const user = await orm.em.findOneOrFail(User, { id: userID }, [
-    'accessTokens',
-  ]);
-
+  const user = await findUserById(userID);
   const token = await genToken();
-  console.log(user, token);
+
+  const uat = new UserAccessToken({
+    user,
+    token,
+  });
+
+  orm.em.persistAndFlush(uat);
 }
