@@ -1,9 +1,9 @@
 import { db } from './config';
 import { Options } from 'mikro-orm';
 import { ConnectionString } from 'connection-string';
-import { Users } from './src/entities/Users';
-import { UserAccessTokens } from './src/entities/UserAccessTokens';
-import { Transactions } from './src/entities/Transactions';
+import { User } from './src/entities/User';
+import { UserAccessToken } from './src/entities/UserAccessToken';
+import { Transaction } from './src/entities/Transaction';
 
 const { host, port, password, database, username: user } = db;
 
@@ -24,7 +24,7 @@ cs.setDefaults({
 const databaseUri = cs.toString();
 
 const configs = {
-  entities: [Users, UserAccessTokens, Transactions],
+  entities: [User, UserAccessToken, Transaction],
   entitiesDirs: ['./dist/src/entities'],
   entitiesDirsTs: ['./src/entities'],
   dbName: database,

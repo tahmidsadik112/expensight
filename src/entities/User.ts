@@ -5,11 +5,12 @@ import {
   Unique,
   OneToMany,
   Collection,
+  WrappedEntity,
 } from 'mikro-orm';
-import { UserAccessTokens } from './UserAccessTokens';
+import { UserAccessToken } from './UserAccessToken';
 
-@Entity()
-export class Users {
+@Entity({ tableName: 'users' })
+export class User {
   @PrimaryKey()
   id!: number;
 
@@ -41,8 +42,8 @@ export class Users {
   })
   modified!: Date;
 
-  @OneToMany(() => UserAccessTokens, uat => uat.user)
-  accessTokens = new Collection<UserAccessTokens>(this);
+  @OneToMany(() => UserAccessToken, uat => uat.user)
+  accessTokens = new Collection<UserAccessToken>(this);
 
   constructor({
     fullName,
@@ -61,3 +62,5 @@ export class Users {
     this.password = password;
   }
 }
+
+export interface User extends WrappedEntity<User, 'id'> {}

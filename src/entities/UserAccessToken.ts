@@ -7,18 +7,15 @@ import {
   Property,
   Unique,
 } from 'mikro-orm';
-import { Users } from './Users';
+import { User } from './User';
 
-@Entity()
-export class UserAccessTokens {
+@Entity({ tableName: 'user_access_tokens' })
+export class UserAccessToken {
   @PrimaryKey()
   id!: number;
 
-  @ManyToOne({ entity: () => Users, cascade: [Cascade.MERGE] })
-  user!: Users;
-
-  @Property({ columnType: 'INTc' })
-  userID: number;
+  @ManyToOne({ entity: () => User, cascade: [Cascade.MERGE] })
+  user!: User;
 
   @Unique({ name: 'user_access_tokens_token_key' })
   @Property({ columnType: 'text' })
@@ -51,7 +48,7 @@ export class UserAccessTokens {
     token,
     expiresAt,
   }: {
-    user: Users;
+    user: User;
     token: string;
     expiresAt?: Date;
   }) {

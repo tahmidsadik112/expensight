@@ -7,7 +7,6 @@ module.exports = {
     'prettier',
     'prettier/@typescript-eslint',
     'plugin:prettier/recommended',
-    'standard',
   ],
   rules: {
     semi: ['error', 'always'],
@@ -22,6 +21,7 @@ module.exports = {
     'space-before-function-paren': 'off',
     '@typescript-eslint/ban-ts-ignore': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/no-empty-interface': 'off',
   },
   plugins: ['jest'],
   env: {

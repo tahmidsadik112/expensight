@@ -1,3 +1,3 @@
-export { Users } from './Users';
-export { Transactions } from './Transactions';
-export { UserAccessTokens } from './UserAccessTokens';
+export { User } from './User';
+export { Transaction } from './Transaction';
+export { UserAccessToken as UserAccessTokens } from './UserAccessToken';
