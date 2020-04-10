@@ -5,12 +5,16 @@ import fastifySensible from 'fastify-sensible';
 import { port } from '../config';
 import { router as userRouter } from './user/controller';
 import { initializeORM, refreshCtx } from './db/index';
+import fc from 'fastify-cookie';
 
 const app = fastify({ logger: { level: 'info', prettyPrint: true } });
 export const { log } = app;
 
 app.register(fastifyFavicon);
 app.register(fastifySensible);
+app.register(fc, {
+  secret: 'cookie-secret',
+});
 
 app.register(userRouter, {
   prefix: '/user',
