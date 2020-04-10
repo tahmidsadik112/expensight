@@ -7,12 +7,12 @@ import type {
 } from 'fastify';
 
 import type { Server, IncomingMessage, ServerResponse } from 'http';
-
 import { userSchema, loginSchema } from './validation-schemas';
 import { createUser, findUserByEmail } from './service';
 import {
   generateAndAssociateAccessTokenWithUser,
   matchPassword,
+  setAuthCookie,
 } from '../common/auth';
 
 type Request = IncomingMessage;
@@ -45,7 +45,8 @@ export const router: RoutePlugin = function (
       },
     },
     async function (
-      req: FastifyRequest
+      req: FastifyRequest,
+      reply: FastifyReply<ServerResponse>
     ): Promise<{
       fullName: string;
       phone: string;
@@ -61,6 +62,7 @@ export const router: RoutePlugin = function (
         phone,
       });
       const uat = await generateAndAssociateAccessTokenWithUser(user);
+      setAuthCookie(reply, uat.token);
       return {
         fullName: name,
         phone,
@@ -77,7 +79,10 @@ export const router: RoutePlugin = function (
         body: loginSchema,
       },
     },
-    async function loginHandler(req: FastifyRequest) {
+    async function loginHandler(
+      req: FastifyRequest,
+      reply: FastifyReply<ServerResponse>
+    ) {
       const { email, password } = req.body;
       const user = await findUserByEmail(email);
       if (!user) {
@@ -93,6 +98,9 @@ export const router: RoutePlugin = function (
       }
 
       const uat = await generateAndAssociateAccessTokenWithUser(user);
+
+      setAuthCookie(reply, uat.token);
+
       return {
         fullName: user.fullName,
         phone: user.phone,

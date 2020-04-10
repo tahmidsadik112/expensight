@@ -4,6 +4,9 @@ import { hash, compare } from 'bcrypt';
 import { log } from '../../server';
 import { findUserById } from '../../user/service';
 import { UserAccessTokens as UserAccessToken, User } from '../../entities';
+import { FastifyReply } from 'fastify';
+import { addDays } from 'date-fns';
+import type { ServerResponse } from 'http';
 
 /*
  * * in a separate function so that we can control the generation logic separately
@@ -65,4 +68,15 @@ export async function matchPassword(
   }
   log.debug(user);
   return compare(password, user.password);
+}
+
+export function setAuthCookie(
+  reply: FastifyReply<ServerResponse>,
+  token: string
+): void {
+  reply.setCookie('__estk', token, {
+    httpOnly: true,
+    signed: true,
+    expires: addDays(new Date(), 7),
+  });
 }
