@@ -4,12 +4,14 @@ create table users (
   phone TEXT not null UNIQUE,
   email TEXT not null UNIQUE,
   password TEXT not null,
-  created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE INDEX users_email_idx ON users (email);
 
-CREATE TRIGGER update_users_modtime BEFORE UPDATE ON users FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
+CREATE TRIGGER update_users_updated_at_column 
+BEFORE UPDATE ON users 
+FOR EACH ROW EXECUTE PROCEDURE updated_at();
 
 
