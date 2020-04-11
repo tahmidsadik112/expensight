@@ -34,14 +34,14 @@ export class UserAccessToken {
     length: 6,
     default: 'CURRENT_TIMESTAMP',
   })
-  created!: Date;
+  created_at!: Date;
 
   @Property({
     columnType: 'timestamp',
     length: 6,
     default: 'CURRENT_TIMESTAMP',
   })
-  modified!: Date;
+  updated_at!: Date;
 
   constructor({
     user,

@@ -33,14 +33,14 @@ export class User {
     length: 6,
     default: 'CURRENT_TIMESTAMP',
   })
-  created!: Date;
+  created_at!: Date;
 
   @Property({
     columnType: 'timestamp',
     length: 6,
     default: 'CURRENT_TIMESTAMP',
   })
-  modified!: Date;
+  updated_at!: Date;
 
   @OneToMany(() => UserAccessToken, uat => uat.user)
   accessTokens = new Collection<UserAccessToken>(this);
