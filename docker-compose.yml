@@ -1,5 +1,9 @@
 version: "3.6"
 services:
+  loadbalncer:
+    image: nginx:1.17.9-alpine
+    volumes:
+      - ./scripts/certs:/certs
   postgres:
     image: postgres:11.7
     restart: always

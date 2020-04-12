@@ -73,3 +73,6 @@ package-lock.json
 # type-coverage
 coverage-ts
 temp
+
+# self signed certs
+scripts/nginx/certs
