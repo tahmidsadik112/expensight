@@ -1,8 +1,6 @@
-name: build-test-deploy
-on:
-  push:
-    branches:
-      - '*'
+name: Deploy Job
+on: [push]
+
 jobs:
   deploy:
     name: deploy job
@@ -11,7 +9,7 @@ jobs:
     - name: Prints a message to indicate deploy is starting
       uses: appleboy/ssh-action@master
       with:
-        host: ${{ secrets.HOST }}
+        host: ${{ secrets.host }}
         username: "deploy_bot"
         key: ${{ secrets.deploy_bot_key }}
         script: |
