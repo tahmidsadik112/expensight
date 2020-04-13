@@ -1,0 +1,21 @@
+name:
+  build-test-deploy
+  on:
+    push:
+      branches:
+        - master
+  jobs:
+    deploy:
+      name: deploy job
+      runs-on: ubuntu-18.04
+      steps:
+      - name: Prints a message to indicate deploy is starting
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: "deploy_bot"
+          key: ${{ secrets.deploy_bot_key }}
+          script: |
+            whoami
+            ls -al
+
