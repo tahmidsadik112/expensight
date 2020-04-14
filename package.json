@@ -27,7 +27,7 @@
     "mg:repair": "synor repair",
     "mg:info": "synor info --filter=-state=reverted | awk '{ if ($3 != \"undo\") { print } }'",
     "mg:new": "postgrator-new migrations js",
-    "lint": "lint-staged",
+    "lint": "eslint src/**/*.ts",
     "ts-cov": "typescript-coverage-report"
   },
   "dependencies": {
