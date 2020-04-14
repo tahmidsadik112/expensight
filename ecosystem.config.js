@@ -13,6 +13,9 @@ module.exports = {
       instances: 'max',
       autorestart: true,
       watch: false,
+      error_file: 'err.log',
+      out_file: 'out.log',
+      log_file: 'combined.log',
       env: {
         NODE_ENV: 'development',
       },
@@ -32,7 +35,7 @@ module.exports = {
       ssh_options: 'StrictHostKeyChecking=no',
       path: '/home/deploy_bot/expensight',
       'post-deploy':
-        'export NODE_ENV=production && yarn install --prod=false && yarn build && pm2 reload ecosystem.config.js --env production && pm2 save',
+        'export NODE_ENV=production && yarn install --prod=false && yarn build && pm2 startOrReload ecosystem.config.js --env production && pm2 save',
     },
   },
 };
