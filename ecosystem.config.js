@@ -32,7 +32,7 @@ module.exports = {
       ssh_options: 'StrictHostKeyChecking=no',
       path: '/home/deploy_bot/expensight',
       'post-deploy':
-        'export NODE_ENV=production && yarn install --prod=false && yarn clean && yarn ts:js && pm2 reload ecosystem.config.js --env production && pm2 save',
+        'export NODE_ENV=production && yarn install --prod=false && yarn build && pm2 reload ecosystem.config.js --env production && pm2 save',
     },
   },
 };
