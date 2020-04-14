@@ -6,45 +6,42 @@ jobs:
     name: build
     runs-on: ubuntu-18.04
     steps:
-    - name: checkout 
-      uses: actions/checkout@v2
-    - name: install and setup nodejs
-      uses: actions/setup-node@v1
-      with:
-        node-verison: '12.x'
-    - run: yarn install --frozen-lockfile
-    - run: yarn build
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: install and setup nodejs
+        uses: actions/setup-node@v1
+        with:
+          node-verison: "12.x"
+      - run: yarn install --frozen-lockfile
+      - run: yarn build
 
   lint:
     name: lint
     runs-on: ubuntu-18.04
     steps:
-    - name: checkout 
-      uses: actions/checkout@v2
-    - name: install and setup nodejs
-      uses: actions/setup-node@v1
-      with:
-        node-verison: '12.x'
-    - run: yarn install --frozen-lockfile
-    - run: yarn lint
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: install and setup nodejs
+        uses: actions/setup-node@v1
+        with:
+          node-verison: "12.x"
+      - run: yarn install --frozen-lockfile
+      - run: yarn lint
 
   deploy:
     name: deploy
     needs: [build, lint]
     runs-on: ubuntu-18.04
     steps:
-    - name: checkout 
-      uses: actions/checkout@v2
-    - name: install and setup nodejs
-      uses: actions/setup-node@v1
-      with:
-        node-verison: '12.x'
-    - name: setup ssh configuration
-      uses: webfactory/ssh-agent@v0.2.0
-      with:
-        ssh_private_key: ${{secrets.deploy_bot_key}}
-    - name: deploy with pm2
-      run : yarn deploy:production
-
-
-
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: install and setup nodejs
+        uses: actions/setup-node@v1
+        with:
+          node-verison: "12.x"
+      - name: setup ssh configuration
+        uses: webfactory/ssh-agent@v0.2.0
+        with:
+          ssh-private-key: ${{secrets.deploy_bot_key}}
+      - name: deploy with pm2
+        run: yarn deploy:production
