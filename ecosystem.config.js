@@ -27,7 +27,6 @@ module.exports = {
 
   deploy: {
     production: {
-      key: '~/.ssh/id_deploy_bot.pub',
       user: 'deploy_bot',
       host: '52.221.208.59',
       ref: 'origin/master',
