@@ -1,5 +1,6 @@
 name: Deploy Job
-on: [push]
+on:
+  push:
 
 jobs:
   build:
@@ -30,7 +31,10 @@ jobs:
 
   deploy:
     name: deploy
-    needs: [build, lint]
+    if: github.ref == 'refs/heads/master'
+    needs:
+      - build
+      - lint
     runs-on: ubuntu-18.04
     steps:
       - name: checkout
