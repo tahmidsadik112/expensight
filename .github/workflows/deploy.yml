@@ -1,18 +1,53 @@
 name: Deploy Job
-on: [push]
+on:
+  push:
 
 jobs:
-  deploy:
-    name: deploy job
+  build:
+    name: build
     runs-on: ubuntu-18.04
     steps:
-    - name: Prints a message to indicate deploy is starting
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.host }}
-        username: "deploy_bot"
-        key: ${{ secrets.deploy_bot_key }}
-        script: |
-          whoami
-          ls -al
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: install and setup nodejs
+        uses: actions/setup-node@v1
+        with:
+          node-verison: "12.x"
+      - run: yarn install --frozen-lockfile
+      - run: yarn build
 
+  lint:
+    name: lint
+    runs-on: ubuntu-18.04
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: install and setup nodejs
+        uses: actions/setup-node@v1
+        with:
+          node-verison: "12.x"
+      - run: yarn install --frozen-lockfile
+      - run: yarn lint
+
+  deploy:
+    name: deploy
+    if: github.ref == 'refs/heads/master'
+    needs:
+      - build
+      - lint
+    runs-on: ubuntu-18.04
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: install and setup nodejs
+        uses: actions/setup-node@v1
+        with:
+          node-verison: "12.x"
+      - name: setup ssh configuration
+        uses: webfactory/ssh-agent@v0.2.0
+        with:
+          ssh-private-key: ${{secrets.deploy_bot_key}}
+      - name: download and install dependencies
+        run: yarn install --frozen-lockfile
+      - name: deploy with pm2
+        run: yarn deploy:production

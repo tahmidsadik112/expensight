@@ -1,3 +1,1 @@
-export async function createUser() {}
-
-export async function fetchUser() {}
+export * from './service';
